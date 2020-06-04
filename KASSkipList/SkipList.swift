@@ -174,6 +174,22 @@ extension SkipList {
 
 extension SkipList {
     
+    func pop(key: Key) -> T? {
+        var current = self.findPreviousNode(key: key)
+        let value = current?.next?.data
+        while current != nil  {
+            current?.next = current?.next?.next
+            current = current?.down
+        }
+        return value
+    }
+    
+    func remove(key:Key) {
+        _ = self.pop(key: key)
+    }
+}
+
+extension SkipList {
     public func get(key: Key) -> T? {
         debugPrint("开始获取------------->")
         return search(key: key)
