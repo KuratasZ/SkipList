@@ -2,7 +2,7 @@
 //  SkipList.swift
 //  KASSkipList
 //
-//  Created by zhangwei on 2020/6/3.
+//  Created by Erwin on 2020/6/3.
 //  Copyright © 2020 Kuratasx. All rights reserved.
 //
 
@@ -177,7 +177,6 @@ extension SkipList {
 }
 
 extension SkipList {
-    
     func pop(key: Key) -> T? {
         var current = self.findPreviousNode(key: key)
         let value = current?.next?.data
@@ -238,58 +237,25 @@ extension SkipList:CustomDebugStringConvertible{
 }
 
 // MARK: - DataNode
-class DataNode<Key: Comparable, T> {
-    public typealias Node = DataNode<Key, T>
-    var data: T?
-    fileprivate var key: Key?
-    var next: Node?
-    var down: Node?
-    
-    public init(key: Key, data: T) {
-        //如果不修改父类参数，不需要显式调用super.init()
-        self.key  = key
-        self.data = data
+extension SkipList {
+    class DataNode<Key: Comparable, T> {
+        public typealias Node = DataNode<Key, T>
+        var data: T?
+        fileprivate var key: Key?
+        var next: Node?
+        var down: Node?
         
-    }
-    /// 生成头节点,参数无实际意义，仅提高可读性
-    /// - Parameter head: 是否头节点
-    public init(asHead head: Bool) {}
-}
-
-
-
-// MARK: - Stack
-public struct Stack<T> {
-    fileprivate var array: [T] = []
-    
-    public var isEmpty: Bool {
-        return array.isEmpty
-    }
-    
-    public var count: Int {
-        return array.count
-    }
-    
-    public mutating func push(_ element: T) {
-        array.append(element)
-    }
-    
-    public mutating func pop() -> T? {
-        return array.popLast()
-    }
-    
-    public func peek() -> T? {
-        return array.last
+        public init(key: Key, data: T) {
+            //如果不修改父类参数，不需要显式调用super.init()
+            self.key  = key
+            self.data = data
+            
+        }
+        /// 生成头节点,参数无实际意义，仅提高可读性
+        /// - Parameter head: 是否头节点
+        public init(asHead head: Bool) {}
     }
 }
-// Sequence 迭代协议
-extension Stack: Sequence {
-    public func makeIterator() -> AnyIterator<T> {
-        var curr = self
-        return AnyIterator { curr.pop() }
-    }
-}
-
 // MARK: - Other
 
 // 随机函数，决定要不要往塔中添加

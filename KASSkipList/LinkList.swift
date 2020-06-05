@@ -2,7 +2,7 @@
 //  LinkList.swift
 //  KASSkipList
 //
-//  Created by zhangwei on 2020/6/3.
+//  Created by Erwin on 2020/6/3.
 //  Copyright © 2020 Kuratasx. All rights reserved.
 //
 
