@@ -15,6 +15,7 @@ open class SkipList<Key: Comparable, T> {
     typealias Node = DataNode<Key, T>
     fileprivate(set) var head: Node?
     public init() {}
+    private var showTime = false
 }
 
 extension SkipList {
@@ -27,7 +28,9 @@ extension SkipList {
         var found = false
         var stop = false
         while !found && !stop {
-            debugPrint("---------->>\(#function)<<---------")
+            if self.showTime{
+                debugPrint("---------->>\(#function)<<---------")
+            }
             if current == nil {
                 stop = true
             }else{
@@ -46,6 +49,7 @@ extension SkipList {
                 }
             }
         }
+        self.showTime = false
         if found {
             return current
         }else{
@@ -179,7 +183,7 @@ extension SkipList {
         let value = current?.next?.data
         while current != nil  {
             current?.next = current?.next?.next
-            current = current?.down
+            current = self.findPreviousNode(key: key)
         }
         return value
     }
@@ -190,8 +194,11 @@ extension SkipList {
 }
 
 extension SkipList {
-    public func get(key: Key) -> T? {
-        debugPrint("开始获取------------->")
+    public func get(key: Key, show: Bool = false) -> T? {
+        if show {
+            debugPrint("开始获取------------->")
+            self.showTime = show
+        }
         return search(key: key)
     }
 }
