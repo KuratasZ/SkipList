@@ -10,11 +10,11 @@ import Cocoa
 
 
 
-/// 红黑树
+/// 红黑二叉查找树
 ///
 /// 原型是2-3树，红色链接的两个点组成一个3结点，黑的单点则是2结点
 ///
-/// 红链接均为左链接
+/// 红链接均为左链接（没有该约束的红黑树的原型是2-3-4树）
 ///
 /// 没有任何一个结点同时和两条红链接相连
 ///
@@ -50,7 +50,7 @@ extension RedBlackBST {
             _node = self.rotateRight(_node)
         }
         if self.isRed(_node.left) && self.isRed(_node.right){
-            self.flipColor(_node)
+            self.flipColors(_node)
         }
         
         _node.sum = self.size(_node.left) + size(_node.right) + 1
@@ -91,10 +91,17 @@ extension RedBlackBST {
         return target
     }
     
-    private  func flipColor(_ target: Node) {
-        target.color = .red
-        target.left?.color = .black
-        target.right?.color = .black
+    /// 将该树结点颜色取反
+    /// - Parameter target: 树的根结点
+    private func flipColors(_ target: Node) {
+        
+        target.color = !target.color
+        if let left = target.left {
+            left.color = !left.color
+        }
+        if let right = target.right {
+            right.color = !right.color
+        }
     }
     func isRed(_ node: Node?) -> Bool {
         return node?.color == .red
@@ -106,12 +113,119 @@ extension RedBlackBST {
         return node!.sum
     }
 }
+// MARK:  - remove
+extension RedBlackBST{
+
+    
+    func deleteMin() {
+        if !self.isRed(self.root?.left) && !self.isRed(self.root?.right){
+            root?.color = .red
+        }
+        self.root = self.deleteMin(self.root)
+        if !self.isEmpty() {
+            self.root?.color = .black
+        }
+    }
+    
+    private func deleteMin(_ node: Node?) -> Node?{
+        print("deleteMin")
+        print(middleTraversal(node))
+
+        guard var _node = node else {
+            return nil
+        }
+        if _node.left == nil {
+            return nil
+        }
+        if !self.isRed(_node.left) && !self.isRed(_node.left?.left) {
+            _node = moveRedLeft(_node)
+        }
+        _node.left = deleteMin(_node.left)
+        print("deleteMin _node")
+        print(middleTraversal(_node))
+        print("deleteMin end \n")
+        return balance(_node)
+    }
+    
+    private func moveRedLeft(_ node: Node) -> Node {
+        var _node = node
+        
+        self.flipColors(_node)
+        if self.isRed(_node.right?.left){
+            _node.right = rotateRight(_node.right!)
+            _node = rotateLeft(_node)
+        }
+        return _node
+    }
+    
+    private func balance(_ node: Node) ->Node{
+        var _node = node
+        if self.isRed(_node.right) {
+            _node = self.rotateLeft(_node)
+        }
+        if self.isRed(_node.left) && self.isRed(_node.left?.left) {
+            _node = rotateRight(_node)
+        }
+        if self.isRed(_node.left) && self.isRed(_node.right){
+            self.flipColors(_node)
+        }
+        _node.sum = self.size(_node.left) + self.size(_node.right) + 1
+        return _node
+    }
+    
+    
+    //    func delete(key: Key) {
+    //        if !self.isRed(root?.left) && !self.isRed(root?.right){
+    //            self.root?.color = .red
+    //        }
+    //        root = delete
+    //    }
+    //    private func delete(h: Node, key: Key) -> Node{
+    //
+    //    }
+    
+    public func isEmpty() -> Bool{
+        return self.root == nil
+    }
+}
+
+
+extension RedBlackBST: CustomStringConvertible {
+    public var description: String {
+        self.middleTraversal(self.root)
+        return "-----"
+    }
+    
+    private func middleTraversal(_ root: Node?){
+        if root != nil {
+            print(root!.key,"=",root!.data,root!.color,root?.left?.data, root?.right?.data)
+            middleTraversal(root?.left)
+            middleTraversal(root?.right)
+        }
+    }
+    
+    //    private func middleTraversal(_ root: Node?)->T?{
+    //        var r:T? = nil
+    //        if root != nil {
+    //            _ = middleTraversal(root?.left)
+    //            r = root?.data
+    //            _ = middleTraversal(root?.right)
+    //            return r
+    //        }
+    //        return r
+    //    }
+    
+}
 // MARK:  - Node
 extension RedBlackBST{
     // 内置 形成命名空间 防止类名冲突
     enum RBNodeColor {
         case red
         case black
+        // 重载前缀运算符
+        static prefix func !( color: inout RBNodeColor) -> RBNodeColor{
+            return color == .red ? .black : .red
+        }
     }
     public class RBNode<Key: Comparable, T> {
         var key: Key
@@ -163,6 +277,18 @@ extension RedBlackBST {
             case .unknownError:
                 return "unknown error!"
             }
+        }
+    }
+    // 搁置的bool枚举
+    enum _RBNodeColor_: RawRepresentable {
+        case red
+        case black
+        //        typealias RawValue = Bool
+        var rawValue: Bool {
+            return self == .red ? true : false
+        }
+        init?(rawValue: Bool) {
+            self = rawValue == true ? .red : .black
         }
     }
 }

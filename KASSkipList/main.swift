@@ -59,4 +59,24 @@ for i in 1...10{
     rBT.put(key: "\(i)", data: i)
 }
 
-print(rBT.get("6")!)
+//
+
+print(rBT)
+
+rBT.deleteMin()
+
+
+print(rBT)
+//print(rBT.get("6"))
+
+
+//var a = "bc1"
+//var b = "bc3"
+//
+//var s = [1,2,3,4,5,6,7,8,9,10]
+//print(s.count)
+//if a < b {
+//    print("yes")
+//}
+
+
