@@ -1,2 +1,2 @@
-# SkipList & RedBlackBST
+# SkipList
 Skip List

@@ -51,23 +51,7 @@ print(MemoryLayout<SkipList<Int,String>>.size)
 print(MemoryLayout.size(ofValue: k))
 
 
-debugPrint("new line -----------------")
-let rBT = RedBlackBST<String,Int>()
 
-
-for i in 1...10{
-    rBT.put(key: "\(i)", data: i)
-}
-
-//
-
-print(rBT)
-
-rBT.deleteMin()
-
-
-print(rBT)
-//print(rBT.get("6"))
 
 
 //var a = "bc1"
